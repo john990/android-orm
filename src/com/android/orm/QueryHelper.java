@@ -135,4 +135,11 @@ public class QueryHelper {
 			}
 		});
 	}
+
+	/**
+	 * 关闭数据库
+	 */
+	public static void close(){
+		db.close();
+	}
 }

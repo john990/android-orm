@@ -7,3 +7,15 @@ android-orm
 
 - 异步加载
 - 查询直接返回bean
+
+####How to use
+
+	String sql = "select id,name from test";
+	QueryHelper.findBeans(TestBean.class,sql,null, new QueryHelper.FindBeansCallBack<TestBean>() {
+		@Override
+		public void onFinish(List<TestBean> beans) {
+			for(TestBean bean : beans){
+				Log.i("test", bean.toString());
+			}
+		}
+	});

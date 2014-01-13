@@ -19,9 +19,9 @@ public class TestActivity extends Activity {
 		String sql1 = "select id,name from test";
 		String sql2 = "insert into test values (?,?)";
 		String sql3 = "select count(1) from test";
-//		for(int i=0;i<100;i++){
-//			QueryHelper.update(sql2, new String[]{i + "", "name" + i}, null);
-//		}
+		for(int i=0;i<5;i++){
+			QueryHelper.update(sql2, new String[]{i + "", "name" + i}, null);
+		}
 		Log.i("time", "1:" + System.currentTimeMillis());
 		QueryHelper.findBeans(TestBean.class, sql1, null, new QueryHelper.FindBeansCallBack<TestBean>() {
 			@Override

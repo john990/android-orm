@@ -10,6 +10,8 @@ android-orm
 
 ####How to use
 
+See   [TestActivity](https://github.com/kai-wang-john/android-orm/blob/master/src/com/android/orm/TestActivity.java)
+
 	String sql = "select id,name from test";
 	QueryHelper.findBeans(TestBean.class,sql,null, new QueryHelper.FindBeansCallBack<TestBean>() {
 		@Override

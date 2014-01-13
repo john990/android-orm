@@ -19,6 +19,10 @@ public class QueryHelper {
 		executor = Executors.newSingleThreadExecutor();
 	}
 
+	/**
+	 * 初始化，建议在程序最初调用（application）
+	 * @param helper
+	 */
 	public static void init(SQLiteOpenHelper helper) {
 		db = helper.getWritableDatabase();
 	}

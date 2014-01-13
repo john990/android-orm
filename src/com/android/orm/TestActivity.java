@@ -6,7 +6,7 @@ import android.util.Log;
 
 import java.util.List;
 
-public class MyActivity extends Activity {
+public class TestActivity extends Activity {
 	/**
 	 * Called when the activity is first created.
 	 */

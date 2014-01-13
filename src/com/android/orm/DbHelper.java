@@ -20,6 +20,14 @@ public class DbHelper extends SQLiteOpenHelper{
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
+		String testSql = "create table test ( id integer,name varchar)";
+
+		String testData1 = "insert into test values (1,'abc1')";
+		String testData2 = "insert into test values (2,'abc2')";
+
+		db.execSQL(testSql);
+		db.execSQL(testData1);
+		db.execSQL(testData2);
 	}
 
 	@Override

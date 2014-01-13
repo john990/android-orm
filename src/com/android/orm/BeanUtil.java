@@ -21,7 +21,7 @@ public class BeanUtil {
 			String[] columns = cursor.getColumnNames();
 			try {
 				while (cursor.moveToNext()) {
-					bean = (T) Class.forName(cls.getName());
+					bean = cls.newInstance();
 					for(String column : columns){
 						Field field = findFieldByName(fields,column);
 						String letter=column.substring(0, 1).toUpperCase();
@@ -30,13 +30,13 @@ public class BeanUtil {
 						setMethod.invoke(bean,getValueByField(cursor,column,field));
 					}
 				}
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
 			} catch (NoSuchMethodException e) {
 				e.printStackTrace();
 			} catch (InvocationTargetException e) {
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (InstantiationException e) {
 				e.printStackTrace();
 			}
 		}
@@ -50,7 +50,7 @@ public class BeanUtil {
 			String[] columns = cursor.getColumnNames();
 			try {
 				while (cursor.moveToNext()) {
-					T bean = (T) Class.forName(cls.getName());
+					T bean = cls.newInstance();
 					for(String column : columns){
 						Field field = findFieldByName(fields,column);
 						String letter=column.substring(0, 1).toUpperCase();
@@ -60,13 +60,13 @@ public class BeanUtil {
 					}
 					beans.add(bean);
 				}
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
 			} catch (NoSuchMethodException e) {
 				e.printStackTrace();
 			} catch (InvocationTargetException e) {
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (InstantiationException e) {
 				e.printStackTrace();
 			}
 		}

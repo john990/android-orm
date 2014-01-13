@@ -32,7 +32,7 @@ public class QueryHelper {
 	}
 
 	public interface FindBeansCallBack<T> {
-		<T> void onFinish(List<T> bean);
+		void onFinish(List<T> beans);
 	}
 
 	/**
@@ -61,12 +61,12 @@ public class QueryHelper {
 	 * @param callBack
 	 * @param <T>
 	 */
-	public static <T> void findBean(final Class<T> cls, final String sql, final String[] params, final FindBeansCallBack<T> callBack) {
+	public static <T> void findBean(final Class<T> cls, final String sql, final String[] params, final FindBeanCallBack<T> callBack) {
 		executor.execute(new Runnable() {
 			@Override
 			public void run() {
 				Cursor cursor = db.rawQuery(sql, params);
-				if (callBack != null) callBack.onFinish(BeanUtil.cursorToBeans(cursor, cls));
+				if (callBack != null) callBack.onFinish(BeanUtil.cursorToBean(cursor, cls));
 			}
 		});
 	}
@@ -79,12 +79,12 @@ public class QueryHelper {
 	 * @param callBack
 	 * @param <T>
 	 */
-	public static <T> void findBeans(final Class<T> cls, final String sql, final String[] params, final FindBeanCallBack<T> callBack) {
+	public static <T> void findBeans(final Class<T> cls, final String sql, final String[] params, final FindBeansCallBack<T> callBack) {
 		executor.execute(new Runnable() {
 			@Override
 			public void run() {
 				Cursor cursor = db.rawQuery(sql, params);
-				if (callBack != null) callBack.onFinish(BeanUtil.cursorToBean(cursor, cls));
+				if (callBack != null) callBack.onFinish(BeanUtil.cursorToBeans(cursor, cls));
 			}
 		});
 	}

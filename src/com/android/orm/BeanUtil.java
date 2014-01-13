@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by kai.wang on 1/13/14.
  */
-public class BeanUtil {
+class BeanUtil {
 
 	/**
 	 * 从cursor中提取bean

@@ -14,6 +14,13 @@ import java.util.List;
  */
 public class BeanUtil {
 
+	/**
+	 * 从cursor中提取bean
+	 * @param cursor
+	 * @param cls
+	 * @param <T>
+	 * @return
+	 */
 	public static <T> T cursorToBean(Cursor cursor, Class<T> cls) {
 		T bean = null;
 		if (cursor != null && cursor.getCount() > 0) {
@@ -43,6 +50,13 @@ public class BeanUtil {
 		return bean;
 	}
 
+	/**
+	 * 从cursor中提取bean 列表
+	 * @param cursor
+	 * @param cls
+	 * @param <T>
+	 * @return
+	 */
 	public static <T> List<T> cursorToBeans(Cursor cursor, Class<T> cls) {
 		List<T> beans = new ArrayList<T>();
 		if (cursor != null && cursor.getCount() > 0) {
@@ -73,6 +87,13 @@ public class BeanUtil {
 		return beans;
 	}
 
+	/**
+	 * 根据字段取出值
+	 * @param cursor
+	 * @param columnName
+	 * @param field
+	 * @return
+	 */
 	private static Object getValueByField(Cursor cursor,String columnName, Field field){
 		int index = cursor.getColumnIndex(columnName);
 		if (index == -1) return null;// 如果不存在此列则返回null

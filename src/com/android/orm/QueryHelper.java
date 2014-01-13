@@ -39,6 +39,31 @@ public class QueryHelper {
 		void onFinish(List<T> beans);
 	}
 
+	public interface NumberCallBack{
+		void onFinish(Number num);
+	}
+
+//	/**
+//	 * 开始事务
+//	 */
+//	public static void beginTransaction(){
+//		db.beginTransaction();
+//	}
+//
+//	/**
+//	 * 事务成功
+//	 */
+//	public static void setTransactionSuccessful(){
+//		db.setTransactionSuccessful();
+//	}
+//
+//	/**
+//	 * 事务结束
+//	 */
+//	public static void endTransaction(){
+//		db.endTransaction();
+//	}
+
 	/**
 	 * 更新数据库（update,insert,delete）
 	 *
@@ -89,6 +114,24 @@ public class QueryHelper {
 			public void run() {
 				Cursor cursor = db.rawQuery(sql, params);
 				if (callBack != null) callBack.onFinish(BeanUtil.cursorToBeans(cursor, cls));
+			}
+		});
+	}
+
+	/**
+	 * 查询COUNT
+	 * @param sql
+	 * @param params
+	 * @param callBack
+	 */
+	public static void findCount(final String sql, final String[] params,final NumberCallBack callBack){
+		executor.execute(new Runnable() {
+			@Override
+			public void run() {
+				Cursor cursor = db.rawQuery(sql, params);
+				cursor.moveToNext();
+				int count = cursor.getInt(0);
+				if (callBack != null) callBack.onFinish(count);
 			}
 		});
 	}

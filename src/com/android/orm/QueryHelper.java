@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -15,12 +16,16 @@ public class QueryHelper {
 	private static ExecutorService executor;
 	private static SQLiteDatabase db;
 
+	private static List<String> sqls = new ArrayList<String>();
+	private static List<String[]> params = new ArrayList<String[]>();
+
 	static {
 		executor = Executors.newSingleThreadExecutor();
 	}
 
 	/**
 	 * 初始化，建议在程序最初调用（application）
+	 *
 	 * @param helper
 	 */
 	public static void init(SQLiteOpenHelper helper) {
@@ -39,8 +44,14 @@ public class QueryHelper {
 		void onFinish(List<T> beans);
 	}
 
-	public interface NumberCallBack{
+	public interface NumberCallBack {
 		void onFinish(Number num);
+	}
+
+	public interface TransactionCallBack {
+		void onSuccess();
+
+		void onFail();
 	}
 
 //	/**
@@ -65,6 +76,40 @@ public class QueryHelper {
 //	}
 
 	/**
+	 * 事务：添加事务单元
+	 *
+	 * @param sql
+	 * @param params
+	 */
+	public static void addUpdate(String sql, String[] params) {
+		sqls.add(sql);
+		if (params == null) params = new String[]{};
+		QueryHelper.params.add(params);
+	}
+
+	/**
+	 * 开始事务
+	 * @param callBack
+	 */
+	public static void beginTransaction(TransactionCallBack callBack) {
+		try {
+			db.beginTransaction();
+			for (int i = 0; i < sqls.size(); i++) {
+				db.execSQL(sqls.get(i), params.get(i));
+			}
+			sqls.clear();
+			params.clear();
+			db.setTransactionSuccessful();
+			if (callBack != null) callBack.onSuccess();
+		} catch (Exception e) {
+			if (callBack != null) callBack.onFail();
+			e.printStackTrace();
+		} finally {
+			db.endTransaction();
+		}
+	}
+
+	/**
 	 * 更新数据库（update,insert,delete）
 	 *
 	 * @param sql
@@ -84,6 +129,7 @@ public class QueryHelper {
 
 	/**
 	 * 查找单个bean
+	 *
 	 * @param cls
 	 * @param sql
 	 * @param params
@@ -102,6 +148,7 @@ public class QueryHelper {
 
 	/**
 	 * 查找多个bean
+	 *
 	 * @param cls
 	 * @param sql
 	 * @param params
@@ -120,11 +167,12 @@ public class QueryHelper {
 
 	/**
 	 * 查询COUNT
+	 *
 	 * @param sql
 	 * @param params
 	 * @param callBack
 	 */
-	public static void findCount(final String sql, final String[] params,final NumberCallBack callBack){
+	public static void findCount(final String sql, final String[] params, final NumberCallBack callBack) {
 		executor.execute(new Runnable() {
 			@Override
 			public void run() {
@@ -139,7 +187,7 @@ public class QueryHelper {
 	/**
 	 * 关闭数据库
 	 */
-	public static void close(){
+	public static void close() {
 		db.close();
 	}
 }

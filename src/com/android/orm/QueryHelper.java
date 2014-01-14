@@ -175,6 +175,8 @@ public class QueryHelper {
 	 * 关闭数据库
 	 */
 	public static void close() {
-		db.close();
+		if (db != null && db.isOpen()) {
+			db.close();
+		}
 	}
 }

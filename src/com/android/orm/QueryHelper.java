@@ -16,7 +16,9 @@ public class QueryHelper {
 	private static ExecutorService executor;
 	private static SQLiteDatabase db;
 
+	/** 事务: sql */
 	private static List<String> sqls = new ArrayList<String>();
+	/** 事务: 参数 */
 	private static List<String[]> params = new ArrayList<String[]>();
 
 	static {
@@ -54,34 +56,13 @@ public class QueryHelper {
 		void onFail();
 	}
 
-//	/**
-//	 * 开始事务
-//	 */
-//	public static void beginTransaction(){
-//		db.beginTransaction();
-//	}
-//
-//	/**
-//	 * 事务成功
-//	 */
-//	public static void setTransactionSuccessful(){
-//		db.setTransactionSuccessful();
-//	}
-//
-//	/**
-//	 * 事务结束
-//	 */
-//	public static void endTransaction(){
-//		db.endTransaction();
-//	}
-
 	/**
 	 * 事务：添加事务单元
 	 *
 	 * @param sql
 	 * @param params
 	 */
-	public static void addUpdate(String sql, String[] params) {
+	public static void addTransactionUnit(String sql, String[] params) {
 		sqls.add(sql);
 		if (params == null) params = new String[]{};
 		QueryHelper.params.add(params);
@@ -89,24 +70,30 @@ public class QueryHelper {
 
 	/**
 	 * 开始事务
+	 *
 	 * @param callBack
 	 */
-	public static void beginTransaction(TransactionCallBack callBack) {
-		try {
-			db.beginTransaction();
-			for (int i = 0; i < sqls.size(); i++) {
-				db.execSQL(sqls.get(i), params.get(i));
+	public static void beginTransaction(final TransactionCallBack callBack) {
+		executor.execute(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					db.beginTransaction();
+					for (int i = 0; i < sqls.size(); i++) {
+						db.execSQL(sqls.get(i), params.get(i));
+					}
+					sqls.clear();
+					params.clear();
+					db.setTransactionSuccessful();
+					if (callBack != null) callBack.onSuccess();
+				} catch (Exception e) {
+					if (callBack != null) callBack.onFail();
+					e.printStackTrace();
+				} finally {
+					db.endTransaction();
+				}
 			}
-			sqls.clear();
-			params.clear();
-			db.setTransactionSuccessful();
-			if (callBack != null) callBack.onSuccess();
-		} catch (Exception e) {
-			if (callBack != null) callBack.onFail();
-			e.printStackTrace();
-		} finally {
-			db.endTransaction();
-		}
+		});
 	}
 
 	/**

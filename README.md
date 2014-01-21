@@ -1,4 +1,6 @@
-android-orm
+######不再更新，所有后续功能在[android-library](https://github.com/kai-wang-john/android-library)上更新
+
+##android-orm
 ===========
 参考了[Apache dbutils](http://commons.apache.org/proper/commons-dbutils/)
 
